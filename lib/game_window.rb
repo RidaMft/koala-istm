@@ -1,7 +1,3 @@
-
-
-
-
 class Ruby
   attr_reader :x, :y
 WindowWidth = 1024
@@ -20,9 +16,7 @@ attr_reader :type
     #On s'assure que les ruby restent bien dans la fenêtre
     @x = rand * (WindowWidth - @image.width)
     # Les ruby apparraissent aléatoirement dans la fenêtre
-    @y = rand * (768 - @image.width)
-
-  
+    @y = rand * (768 - @image.width)  
   end
 
   def update
@@ -35,10 +29,8 @@ attr_reader :type
 
 end
 
-
 # Gestion de l'affichage du score
 class UI
-
   def initialize
     @font = Gosu::Font.new(35, name: "front/orange juice 2.0.ttf")
   end
@@ -46,11 +38,7 @@ class UI
   def draw(score:)
     @font.draw("Score: #{score}", 10, 10, 3, 1.0, 1.0, 0xff_ffff00)
   end
-
 end
-
-
-
 
 class GameWindow < Hasu::Window
   SPRITE_SIZE = 128
@@ -58,11 +46,9 @@ class GameWindow < Hasu::Window
   WINDOW_Y = 768
 attr_reader :score
   def initialize
-    
     @score = 0
     super(WINDOW_X, WINDOW_Y, false)
     @ui = UI.new
-   
     @background_sprite = Gosu::Image.new(self, 'images/background.png', true)
     @koala_sprite = Gosu::Image.new(self, 'images/koala.png', true)
     @enemy_sprite = Gosu::Image.new(self, 'images/enemy.png', true)
@@ -74,14 +60,11 @@ attr_reader :score
     @music = Gosu::Song.new(self, "musics/koala.wav")
     @lose_sprite = Gosu::Image.new(self, 'images/flag.png', true)
     @items = []
-
-
-
     reset
   end
 
   def update
-#on fera apparaitre àà chaque fois environ 5 ruby 
+#on fera apparaitre à chaque fois environ 5 ruby 
 # avec plus de chance d'obtenir les ruby noirs
     unless @items.size >= 5
       r = rand
@@ -96,7 +79,7 @@ attr_reader :score
     @items.reject! {|item| item.y > WINDOW_Y }
     collect_rubys(@items)
 
-    @player[:x] += @speed if button_down?(Gosu::Button::KbRight)
+    @player[:x] += @speed*2 if button_down?(Gosu::Button::KbRight)
     @player[:x] -= @speed if button_down?(Gosu::Button::KbLeft)
     @player[:y] += @speed if button_down?(Gosu::Button::KbDown)
     @player[:y] -= @speed if button_down?(Gosu::Button::KbUp)
@@ -108,7 +91,6 @@ attr_reader :score
       reinit
     end
     if loosing?
-    
       reset
     end
   end
@@ -118,7 +100,6 @@ def lose
 
 end
   def draw
-
     @font.draw("Level #{@enemies.length}", WINDOW_X - 100, 10, 3, 1.0, 1.0, Gosu::Color::GREEN)
 
     @koala_sprite.draw(@player[:x], @player[:y], 2)
@@ -164,7 +145,6 @@ def collect_rubys(rubys)
       end
     end
   end
-
 
   private
 
@@ -230,6 +210,11 @@ def collect_rubys(rubys)
     if button_down? Gosu::KbEscape
       close
     end
+  end
+
+    # Fonction pour faire accélérer le vaisseau selon son angle.
+  def accelerate
+    @speed += 2
   end
 
   def handle_enemies
